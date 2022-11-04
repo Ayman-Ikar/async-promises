@@ -28,8 +28,8 @@ export async function concurrent() {
 
     setText("");
 
-    const {data : statuses} = await orderStatus;
-    const {data : order} = await orders;
+    const {data: statuses} = await orderStatus;
+    const {data: order} = await orders;
 
     appendText(JSON.stringify(statuses));
     appendText("***********************");
@@ -39,16 +39,17 @@ export async function concurrent() {
 export async function parallel() {
     setText("");
 
-    await Promise.all([
-        (async () => {
-            const {data} = await axios.get("http://localhost:3000/orderStatuses");
-            appendText(JSON.stringify(data));
-        })(),
-        (async () => {
-            const {data} = await axios.get("http://localhost:3000/orders");
-            appendText(JSON.stringify(data));
-        })()
-    ])
+    await Promise.all([getOrderStatus(), getOrders()]);
+}
+
+async function getOrderStatus() {
+    const {data} = await axios.get("http://localhost:3000/orderStatuses");
+    appendText(JSON.stringify(data));
+}
+
+async function getOrders() {
+    const {data} = await axios.get("http://localhost:3000/orders");
+    appendText(JSON.stringify(data));
 }
 
 
